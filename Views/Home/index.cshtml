@@ -1,0 +1,134 @@
+﻿
+@{
+    ViewBag.Title = "index";
+    Layout = "~/Views/Shared/layout.cshtml";
+}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Location Based Searching</title>
+<meta name="keywords" content="Location Based Searching" />
+<meta name="description" content="Location Based Searching" />
+    <script src = "https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places" ></script>
+
+    <script>
+    function initialize() {
+        var mapOptions = {
+            center: new google.maps.LatLng(-33.8688, 151.2195),
+            zoom: 13,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById('map-canvas'),
+mapOptions);
+ 
+        var input = (document.getElementById('searchTextField'));
+        var autocomplete = new google.maps.places.Autocomplete(input);
+ 
+        autocomplete.bindTo('bounds', map);
+ 
+        var infowindow = new google.maps.InfoWindow();
+        var marker = new google.maps.Marker({
+            map: map
+        });
+ 
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            infowindow.close();
+            marker.setVisible(false);
+            input.className = '';
+            var place = autocomplete.getPlace();
+            if (!place.geometry) {
+                // Inform the user that the place was not found and return.
+                input.className = 'notfound';
+                return;
+            }
+ 
+            // If the place has a geometry, then present it on a map.
+            if (place.geometry.viewport) {
+                map.fitBounds(place.geometry.viewport);
+            } else {
+                map.setCenter(place.geometry.location);
+                map.setZoom(17);  // Why 17? Because it looks good.
+            }
+            marker.setIcon(({
+                url: place.icon,
+                size: new google.maps.Size(71, 71),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(17, 34),
+                scaledSize: new google.maps.Size(35, 35)
+            }));
+            marker.setPosition(place.geometry.location);
+            marker.setVisible(true);
+ 
+            var address = '';
+            if (place.address_components) {
+                address = [
+    (place.address_components[0] && place.address_components[0].short_name || ''),
+    (place.address_components[1] && place.address_components[1].short_name || ''),
+    (place.address_components[2] && place.address_components[2].short_name || '')
+  ].join(' ');
+            }
+ var x = document.getElementById("dp");
+ x.innerHTML = place.geometry.latitude;
+            infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+            infowindow.open(map, marker);
+        });
+ 
+        // Sets a listener on a radio button to change the filter type on Places
+        // Autocomplete.
+        function setupClickListener(id, types) {
+            var radioButton = document.getElementById(id);
+            google.maps.event.addDomListener(radioButton, 'click', function () {
+                autocomplete.setTypes(types);
+            });
+        }
+ 
+        setupClickListener('changetype-all', []);
+        setupClickListener('changetype-establishment', ['establishment']);
+        setupClickListener('changetype-geocode', ['geocode']);
+    }
+ 
+    google.maps.event.addDomListener(window, 'load', initialize);
+ 
+</script>
+</head>
+
+
+<body>
+
+
+<div id="templatemo_content_panel1">
+
+	<div id="templatemo_news_section">
+    	<h1>Events</h1>
+        <div class="templatemo_news_box">
+        	<p>This website will inform you all current events in your favourite place<br />By selecting category like concert, boutique,exibition etc a list of related current events will open </p>
+      </div>
+    </div><!-- end of news section -->
+    
+    <div id="templatemo_section_1_1">
+ 
+    	<h3>View Map </h3>
+        
+        	<div class="left_column">
+                <label>Enter place name:</label>
+              <input id="searchTextField" type="text" size="50">
+    
+    <div id="map-canvas" style="height:300px;width:550px;">
+        <asp:Button ID="Button1" runat="server" Text="Proceed" 
+            onclick="Button1_Click" /> 
+     
+            </div>
+            
+        
+
+    </div><!-- end of section 1 -->
+    
+</div>
+
+</div><!-- end of content panel 3 -->
+
+
+
+</html>
