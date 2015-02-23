@@ -1,0 +1,274 @@
+﻿
+@{
+    ViewBag.Title = "place";
+    Layout = "~/Views/Shared/layout.cshtml";
+}
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Location Based Searching</title>
+<meta name="keywords" content="Location Based Searching" />
+<meta name="description" content="Location Based Searching" />
+<link href="~/Content/templatemo_style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="~/Content/gallery_style.css" />
+    <script src = "https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places" ></script>
+
+
+    
+    
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script>
+    function initialize() {
+        var mapOptions = {
+            center: new google.maps.LatLng(-33.8688, 151.2195),
+            zoom: 13,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById('map-canvas'),
+mapOptions);
+ 
+        var input = (document.getElementById('searchTextField'));
+        var autocomplete = new google.maps.places.Autocomplete(input);
+ 
+        autocomplete.bindTo('bounds', map);
+ 
+        var infowindow = new google.maps.InfoWindow();
+        var marker = new google.maps.Marker({
+            map: map
+        });
+ 
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            infowindow.close();
+            marker.setVisible(false);
+            input.className = '';
+            var place = autocomplete.getPlace();
+            if (!place.geometry) {
+                // Inform the user that the place was not found and return.
+                input.className = 'notfound';
+                return;
+            }
+ 
+            // If the place has a geometry, then present it on a map.
+            if (place.geometry.viewport) {
+                var x = document.getElementById("pa");
+                x.value = place.geometry.location.lat();
+                var x1 = document.getElementById("pa1");
+                x1.value = place.geometry.location.lng();
+                map.fitBounds(place.geometry.viewport);
+            } else {
+                map.setCenter(place.geometry.location);
+                map.setZoom(17);  // Why 17? Because it looks good.
+            }
+            marker.setIcon(({
+                url: place.icon,
+            size: new google.maps.Size(71, 71),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(17, 34),
+            scaledSize: new google.maps.Size(35, 35)
+        }));
+        marker.setPosition(place.geometry.location);
+        marker.setVisible(true);
+ 
+        var address = '';
+        if (place.address_components) {
+            address = [
+(place.address_components[0] && place.address_components[0].short_name || ''),
+(place.address_components[1] && place.address_components[1].short_name || ''),
+(place.address_components[2] && place.address_components[2].short_name || '')
+            ].join(' ');
+        }
+ 
+        infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+        infowindow.open(map, marker);
+    });
+ 
+    // Sets a listener on a radio button to change the filter type on Places
+    // Autocomplete.
+    function setupClickListener(id, types) {
+        var radioButton = document.getElementById(id);
+        google.maps.event.addDomListener(radioButton, 'click', function () {
+            autocomplete.setTypes(types);
+        });
+    }
+ 
+    setupClickListener('changetype-all', []);
+    setupClickListener('changetype-establishment', ['establishment']);
+    setupClickListener('changetype-geocode', ['geocode']);
+	
+    }
+ 
+    google.maps.event.addDomListener(window, 'load', initialize);
+ 
+</script>
+
+    <script>
+        var map;
+        var infowindow;
+
+
+        function find() {
+
+
+            var input = $('#searchTextField').val();
+            
+            $("#listv").empty();
+
+           // alert(input);
+            var userName = $('#place').val();
+
+                    
+            $.getJSON("/home/CheckUserName1?place=" + userName + "&searchTextField=" + input, function (data) {
+                        $.each(data, function(i,item)
+                        {
+                         
+                            $("#listv").append("<h4>" + item.type + " " + item.Name  + "--" + item.city + "--" + item.country + "--" + item.phone + "</h4>");
+
+                        });
+                        
+                    });
+
+
+             var v = document.getElementById("place").value;
+
+            var x = document.getElementById("pa").value;
+            var x1 = document.getElementById("pa1").value;
+
+    
+            var pyrmont = new google.maps.LatLng(x, x1);
+
+            map = new google.maps.Map(document.getElementById('map-canvas'), {
+                center: pyrmont,
+                zoom: 15
+            });
+
+  
+            var request = {
+                location: pyrmont,
+                radius:500,
+                types: [v]
+            };
+            infowindow = new google.maps.InfoWindow();
+            var service = new google.maps.places.PlacesService(map);
+            service.nearbySearch(request, callback);
+        }
+
+        function callback(results, status) {
+
+
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                for (var i = 0; i < results.length; i++) {
+                    createMarker(results[i]);
+                }
+            }
+        }
+        function createMarker(place) {
+            var placeLoc = place.geometry.location;
+            var marker = new google.maps.Marker({
+                map: map,
+                position: place.geometry.location
+     
+            });
+    
+            // x1.innerHTML = place.name;
+            var request = {
+                reference: place.reference
+            };
+  
+ 
+            var service = new google.maps.places.PlacesService(map);
+            service.getDetails(request, function (place, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    var marker = new google.maps.Marker({
+                        map: map,
+
+
+                        title: place.name,
+                        position: place.geometry.location
+                    });
+                  
+                  //  $("#listv").append("<ul id='u'>" + place.name + "</ul>");
+                    $("#listv").append("<h4>" + place.name + " " + place.formatted_address + "</h4>");
+          
+                    //       $("#listv").append("<li>" + place.geometry.location.lat() + "</li>");
+                    //      $("#listv").append("<li>" + place.geometry.location.lng() + "</li>");
+                //    $("#u").append("<b>" + place.formatted_address + "</b>");
+                   // $("#listv").append("<li>" + places.rating + "</li>");
+                    //$("#listv").append("<li>" + place.formatted_phone_number + "</li>");
+                    //$("#listv").append("<li>" + places.international_phone_number + "</li>");
+                    // $("#listv").append("<li> ********************</li>");
+
+                    //infowindow.setContent(international_phone_number);
+
+          
+                    //Anarkali, Lahore, Punjab, Pakistan
+                }
+            });
+
+        }
+
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+
+
+</head>
+
+
+<body>
+
+
+<div id="templatemo_content_panel_1">
+
+    <div id="templatemo_section_1_1" style="width:350px;">
+        <p id = "pa" style="margin_left:700px;" style="visibility:hidden"> </p> 
+				<p id = "pa1" style="margin_left:700px;" style="visibility:hidden"> </p> 
+    	<h1>Search places </h1>
+       <input id="searchTextField" type="text" size="40">
+        	<div class="left_column">
+              
+                <div class="form_row"> <label>Category: </label>
+                	<select id = "place" name="state"><option>Select one...</option><option>airport</option><option>atm</option><option>bakery</option><option>bank</option><option>book store</option><option>bus station</option><option>church</option><option>gas station</option><option>hospital</option><option>library</option><option>mosque</option><option>musuem</option><option>park</option><option>pharmacy</option><option>school</option><option>shopping mall</option><option>university</option><option>zoo</option></select>
+                </div>
+            
+                    
+                <div class="form_row"> 
+                	<input type="submit" value="Search" name="submit" class="submit_btn_02" onclick="find()"/>
+                </div>
+            </div>
+            
+       
+    </div><!-- end of section 1 -->
+    &nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;
+
+    
+
+
+    <div id ="list" style="margin-left:600px">
+
+        <ul id="listv">
+        <p id="l"></p>
+      </ul>
+        </div>
+    <div class="cleaner_with_height">&nbsp;</div>
+    <br />
+    <br />
+    <div id="d" style="width:850px;margin-left:2px">
+        <div id="map-canvas" style="height:300px;width:500px;">
+        <asp:Button ID="Button1" runat="server" Text="Proceed" 
+            onclick="Button1_Click" /> 
+        
+            </div>
+    
+        </div>
+
+
+    
+</div>
+
+   
+<div class="cleaner_with_height">&nbsp;</div>
+</div><!-- end of content panel 3 -->
+
+</div> <!-- end of container -->

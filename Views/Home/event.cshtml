@@ -1,0 +1,120 @@
+﻿@{
+    ViewBag.Title = "event";
+    Layout = "~/Views/Shared/layout.cshtml";
+}
+<head>
+
+    <script language="JavaScript">
+
+        function find() {
+
+            var input = $('#place').val();
+            $("#listv").empty();
+
+         
+            var userName = $('#loc').val();
+          
+
+            $.getJSON("/home/CheckUserName2?place=" + input + "&loc=" + userName, function (data) {
+                $.each(data, function (i, item) {
+                    var MyDate_String_Value = item.date;
+                    var value = new Date
+                       (
+                            parseInt(MyDate_String_Value.replace(/(^.*\()|([+-].*$)/g, ''))
+                       );
+                    var dat = value.getMonth() +
+                                             1 +
+                                           "/" +
+                               value.getDate() +
+                                           "/" +
+                           value.getFullYear();
+                    $("#listv").append("<h4>" + item.name + " " + item.category + "--" + item.city + "--" + item.country + "--" + dat + "--" + item.phone + "</h4>");
+
+                });
+
+            });
+
+        }
+        function formSubmit(messageTag, formTag, detail) {
+            var x = document.getElementById(messageTag);
+            var y = x.getElementsByTagName('li');
+            var z = document.getElementById(detail);
+            if (x.style.visibility == 'hidden' && z.style.visibility == 'hidden') {
+                x.style.visibility = 'visible'
+                y[0].innerHTML = "event1";
+                y[1].innerHTML = "event2";
+                y[2].innerHTML = "event3";
+                y[3].innerHTML = "event4";
+                y[4].innerHTML = "event5";
+                y[5].innerHTML = "event6";
+                y[6].innerHTML = "event7";
+
+                z.style.visibility = 'visible'
+                document.forms[formTag].submit();
+            }
+
+
+
+        }
+
+</script>
+
+</head>
+
+
+<body>
+
+<div id="templatemo_content_panel_1">
+
+    <div id="templatemo_section_1_1" style="width:350px;">
+    	<h1>Search Events </h1>
+       
+        	<div class="left_column">
+                <div class="form_row"> <label>City: </label><input type="text" name="place" id="place" placeholder="city" /> </div>
+                <div class="form_row"> <label>Category: </label>
+                	<select name="loc" id="loc"><option>Select one...</option><option>concert</option><option>botique</option><option>book fair</option><option>art exibition</option></select>
+                </div>
+            
+                    
+                <div class="form_row"> 
+                	<input type="submit" value="Search" name="submit" class="submit_btn_02" onclick="find()"/>
+                </div>
+            </div>
+            
+       
+    </div><!-- end of section 1 -->
+    &nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;
+
+
+
+
+    <div id ="list" style="margin-left:400px;">
+
+        <ul id="listv">
+        
+       
+      </ul>
+        </div>
+    <div class="cleaner_with_height">&nbsp;</div>
+    <br />
+    <br />
+    <div id="d" style="width:850px;margin-left:100px;visibility:hidden">
+        <div id="map-canvas" style="height:300px;width:740px;">
+        <asp:Button ID="Button1" runat="server" Text="Proceed" 
+            onclick="Button1_Click" /> 
+        <script type="text/javascript" src= "@Url.Content("~/Scripts/map.js")"></script>                
+            </div>
+    
+        </div>
+
+
+    
+</div>
+
+   
+<div class="cleaner_with_height">&nbsp;</div>
+</div><!-- end of content panel 3 -->
+
+</div> <!-- end of container -->

@@ -1,0 +1,211 @@
+﻿
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Location Based Searching</title>
+<meta name="keywords" content="Location Based Searching" />
+<meta name="description" content="Location Based Searching" />
+<link href="~/Content/templatemo_style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="~/Content/gallery_style.css" />
+    <script src = "https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places" ></script>
+     <script src="~/Scripts/jquery-1.7.1.min.js"></script>
+        <script type="text/javascript" src="//code.jquery.com/jquery-1.10.2.js"></script>
+         <script type='text/javascript' src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+   
+
+    <script>
+    function initialize() {
+        var mapOptions = {
+            center: new google.maps.LatLng(-33.8688, 151.2195),
+            zoom: 13,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById('map-canvas'),
+mapOptions);
+ 
+        var input = (document.getElementById('searchTextField'));
+        var autocomplete = new google.maps.places.Autocomplete(input);
+ 
+        autocomplete.bindTo('bounds', map);
+ 
+        var infowindow = new google.maps.InfoWindow();
+        var marker = new google.maps.Marker({
+            map: map
+        });
+ 
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            infowindow.close();
+            marker.setVisible(false);
+            input.className = '';
+            var place = autocomplete.getPlace();
+            if (!place.geometry) {
+                // Inform the user that the place was not found and return.
+                input.className = 'notfound';
+                return;
+            }
+ 
+            // If the place has a geometry, then present it on a map.
+            if (place.geometry.viewport) {
+                map.fitBounds(place.geometry.viewport);
+            } else {
+                map.setCenter(place.geometry.location);
+                map.setZoom(17);  // Why 17? Because it looks good.
+            }
+            marker.setIcon(({
+                url: place.icon,
+                size: new google.maps.Size(71, 71),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(17, 34),
+                scaledSize: new google.maps.Size(35, 35)
+            }));
+            marker.setPosition(place.geometry.location);
+            marker.setVisible(true);
+ 
+            var address = '';
+            if (place.address_components) {
+                address = [
+    (place.address_components[0] && place.address_components[0].short_name || ''),
+    (place.address_components[1] && place.address_components[1].short_name || ''),
+    (place.address_components[2] && place.address_components[2].short_name || '')
+  ].join(' ');
+            }
+ var x = document.getElementById("dp");
+ x.innerHTML = place.geometry.latitude;
+            infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+            infowindow.open(map, marker);
+        });
+ 
+        // Sets a listener on a radio button to change the filter type on Places
+        // Autocomplete.
+        function setupClickListener(id, types) {
+            var radioButton = document.getElementById(id);
+            google.maps.event.addDomListener(radioButton, 'click', function () {
+                autocomplete.setTypes(types);
+            });
+        }
+ 
+        setupClickListener('changetype-all', []);
+        setupClickListener('changetype-establishment', ['establishment']);
+        setupClickListener('changetype-geocode', ['geocode']);
+    }
+ 
+    google.maps.event.addDomListener(window, 'load', initialize);
+ 
+</script>
+
+
+</head>
+
+
+<body>
+<div id="templatemo_container">
+<div id="templatemo_top_panel">
+	<div id="templatemo_header_section">
+		<div id="templatemo_header">
+        	<h3 style="color: #4f4560;">Location Based Searching</h3>
+        </div>
+    </div> <!-- end of header section -->
+    
+    <div id="templatemo_menu_login_section">
+    	<div id="templatemo_menu_section">
+        	<div id="templatemo_menu_panel">
+                <ul>
+                    <li><a href="/Home/index" class="current">Home</a></li>
+                    <li><a href="/Home/event">Events</a></li>
+                    @{  
+                    string ev = (string)Session["SessionUserID"];
+                    if( ev != null )
+                    {
+                         <li><a href="~/Event/postEvent">Add Event</a></li>
+                    }  
+                
+                    }
+                    <li><a href="/Home/place">Places</a></li>
+                    @{  
+                    string str1 = (string)Session["SessionUserID"];
+                    if( str1 != null )
+                    {
+                         <li><a href="~/Place/addPlace">Add Place</a></li>
+                    }  
+                
+                    }
+                    @{
+                        string str2 = (string)Session["SessionUserID"];
+                        if (str2 == null)
+                        {
+                            <li><a href="/Home/create">Register</a></li>
+                        }
+
+                    }
+                                       
+                 
+                </ul> 
+            </div> <!-- end of menu -->
+        </div>
+        <div id="templatemo_login_section">
+        	<form method="post" action="/Home/login">
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                
+                @{  
+                    string str = (string)Session["SessionUserID"];
+                    if (str == null)
+                    {
+                        <label>Email Address:</label><input type="email" name="email" id="email" class="input_field" /><label>Password:</label><input type="password" name="password" id="password" class="input_field" /><input type="submit" value="" id="submit" name="submit" class="submit_btn" />
+                    }
+                    else
+                    {
+                     <input type="submit" value="signout" id="submit" name="submit"  />   
+                    }  
+                
+                }
+            	
+                
+            </form>
+        </div>
+    </div> <!-- end of menu login section -->
+</div> <!-- end of top panel -->
+
+<div id="templatemo_gallery_panel">
+<div id="gallery">
+  <div id="imagearea">
+    <div id="image">
+      <a href="javascript:slideShow.nav(-1)" class="imgnav " id="previmg"></a>
+      <a href="javascript:slideShow.nav(1)" class="imgnav " id="nextimg"></a>
+    </div>
+  </div>
+  <div id="thumbwrapper">
+    <div id="thumbarea">
+      <ul id="thumbs">
+        <li value="1"><img src="~/images/thumbs/1.jpg" width="179" height="100" alt="" /></li>
+        <li value="2"><img src="~/images/thumbs/2.jpg" width="179" height="100" alt="" /></li>
+        <li value="3"><img src="~/images/thumbs/3.jpg" width="179" height="100" alt="" /></li>
+        <li value="4"><img src="~/images/thumbs/4.jpg" width="179" height="100" alt="" /></li>
+        <li value="5"><img src="~/images/thumbs/5.jpg" width="179" height="100" alt="" /></li>
+        <li value="6"><img src="~/images/thumbs/6.jpg" width="179" height="100" alt="" /></li>
+        <li value="7"><img src="~/images/thumbs/7.jpg" width="179" height="100" alt="" /></li>
+       
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+var imgid = 'image';
+var imgdir = 'images/events';
+var imgext = '.jpg';
+var thumbid = 'thumbs';
+var auto = true;
+var autodelay = 5;
+</script>
+<script type="text/javascript" src= "@Url.Content("~/Scripts/slide.js")"></script>
+    
+</div>
+
+<div id="templatemo_content_panel_1">
+
+        @RenderBody();
+</div> <!-- end of container -->
+</html>

@@ -1,0 +1,91 @@
+﻿@model MvcApplication1.Models.user
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/layout.cshtml";
+}
+
+<html>
+    <head>
+       
+ <script>
+
+     $(document).ready(function () {
+         $('#userNam').blur(function () {
+           //  alert("ooook");
+             var userName = $(m.email).val();
+
+           //  alert(userName);
+             $.getJSON("CheckUserName?email=" + userName, function (data) {
+                 if (data) {
+                     $('#result').text("exist");
+
+                 }
+                 else {
+                     $('#result').text("does not exist");
+                 }
+             });
+         });
+     });
+</script>
+        </head>
+    <body>
+<h2>Create</h2>
+
+@using (Html.BeginForm("create", "Account",FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Register</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.name)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.name)
+            @Html.ValidationMessageFor(model => model.name)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.city)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.city)
+            @Html.ValidationMessageFor(model => model.city)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.country)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.country)
+            @Html.ValidationMessageFor(model => model.country)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.email)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.email)
+            @Html.ValidationMessageFor(model => model.email)
+        </div>
+        <div id="result"></div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.password)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.password)
+            @Html.ValidationMessageFor(model => model.password)
+        </div>
+
+        <p>
+            <input type="submit" value="Create"/>
+        </p>
+    </fieldset>
+}
+
+        </body>
+    </html>

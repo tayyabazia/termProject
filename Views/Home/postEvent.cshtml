@@ -1,0 +1,114 @@
+﻿@model MvcApplication1.Models.Event
+@{
+    ViewBag.Title = "postEvent";
+    Layout = "~/Views/Shared/layout.cshtml";
+}
+    <head>
+        <title>Post Event</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <link rel="stylesheet" type="text/css" href="css/default.css"/>
+
+        
+<title>Location Based Searching</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+<meta name="keywords" content="Location Based Searching" />
+<meta name="description" content="Location Based Searching" />
+<link href="~/Content/templatemo_style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="~/Content/gallery_style.css" />
+
+        <style>
+            
+        #registration {
+			color: #fff;
+            background: #2d2d2d;
+            background: -webkit-gradient(
+                            linear,
+                            left bottom,
+                            left top,
+                            color-stop(0, rgb(60,60,60)),
+                            color-stop(0.74, rgb(43,43,43)),
+                            color-stop(1, rgb(60,60,60))
+                        );
+            background: -moz-linear-gradient(
+                            center bottom,
+                            rgb(60,60,60) 0%,
+                            rgb(43,43,43) 74%,
+                            rgb(60,60,60) 100%
+                        );
+            -moz-border-radius: 10px;
+            -webkit-border-radius: 10px;
+			border-radius: 10px;
+            margin: 10px;
+			width: 430px;
+            }
+
+
+        </style>
+    </head>
+    <body>  
+        <br />
+        <br />
+        <br />
+        <h1 style="color: #8c910b;font-size:250%;margin-left:110px" >Post Event</h1>
+        <div id= "registration" style="width:540px;margin-left:100px">  
+            
+@using (Html.BeginForm("postEvent","Event")) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>ADD PLACE</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.name)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.name)
+            @Html.ValidationMessageFor(model => model.name)
+        </div>
+        <div>
+        <label>Category</label>
+        <select name="category"><option>Select one...</option><option>concert</option><option>botique</option><option>book fair</option><option>art exibition</option></select>
+
+        </div>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.city)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.city)
+            @Html.ValidationMessageFor(model => model.city)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.country)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.country)
+            @Html.ValidationMessageFor(model => model.country)
+        </div>
+
+        
+        <div class="editor-label">
+            @Html.LabelFor(model => model.phone)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.phone)
+            @Html.ValidationMessageFor(model => model.phone)
+        </div>
+        <label>Date Format: dd/mm/yy</label>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.date)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.date)
+            @Html.ValidationMessageFor(model => model.date)
+        </div>
+
+        <p>
+            <input type="submit" value="Add" />
+        </p>
+    </fieldset>
+}
+
+        </div>
+    </body>

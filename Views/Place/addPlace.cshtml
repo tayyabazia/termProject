@@ -1,0 +1,143 @@
+﻿@model MvcApplication1.Models.place
+
+@{
+    ViewBag.Title = "addPlace";
+    Layout = "~/Views/Shared/layout.cshtml";
+}
+
+    <head>
+        <title>Add Place</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <link rel="stylesheet" type="text/css" href="css/default.css"/>
+
+        
+<title>Location Based Searching</title>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+<meta name="keywords" content="Location Based Searching" />
+<meta name="description" content="Location Based Searching" />
+<link href="~/Content/templatemo_style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="~/Content/gallery_style.css" />
+        
+<style type="text/css">
+    	
+ input#name { 
+ 	background-position: 4px -46px; 
+	background-position: 4px -46px, 0px 0px; 
+	}
+	
+        
+        #registration {
+			color: #fff;
+            background: #2d2d2d;
+            background: -webkit-gradient(
+                            linear,
+                            left bottom,
+                            left top,
+                            color-stop(0, rgb(60,60,60)),
+                            color-stop(0.74, rgb(43,43,43)),
+                            color-stop(1, rgb(60,60,60))
+                        );
+            background: -moz-linear-gradient(
+                            center bottom,
+                            rgb(60,60,60) 0%,
+                            rgb(43,43,43) 74%,
+                            rgb(60,60,60) 100%
+                        );
+            -moz-border-radius: 10px;
+            -webkit-border-radius: 10px;
+			border-radius: 10px;
+            margin: 10px;
+			width: 430px;
+            }
+
+</style>
+    </head>
+    <body>  
+        <br />
+        <br />
+        <br />
+        <h1 style="color: #8c910b;font-size:350%;margin-left:100px" >Add Place</h1>
+        <div id="registration" style="width:400px;margin-left:100px">  
+        
+            
+@using (Html.BeginForm("AddPlace","Place")) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>ADD PLACE</legend>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Name)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.city)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.city)
+            @Html.ValidationMessageFor(model => model.city)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.country)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.country)
+            @Html.ValidationMessageFor(model => model.country)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.lat)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.lat)
+            @Html.ValidationMessageFor(model => model.lat)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.lng)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.lng)
+            @Html.ValidationMessageFor(model => model.lng)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.type)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.type)
+            @Html.ValidationMessageFor(model => model.type)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.phone)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.phone)
+            @Html.ValidationMessageFor(model => model.phone)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.website)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.website)
+            @Html.ValidationMessageFor(model => model.website)
+        </div>
+
+        <p>
+            <input type="submit" value="Add" />
+        </p>
+    </fieldset>
+}
+
+            
+            
+        </div>
+    </body>
